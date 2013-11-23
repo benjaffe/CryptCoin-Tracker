@@ -1,0 +1,20 @@
+.coinInfo {
+	background:#EEE;
+	padding:10px 0;
+	margin:20px auto;
+	border:1px solid #AAA;
+}
+.coinInfo th,
+.coinInfo td {
+	padding:0 20px;
+	text-align: center;
+	border-right:1px solid #BBB;
+}
+.coinInfo th:last-child,
+.coinInfo td:last-child {
+	border-right:none;
+}
+
+.note {
+	text-align: center;
+}

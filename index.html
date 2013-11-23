@@ -1,48 +1,56 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app>
 <head>
 	<meta charset="UTF-8">
 	<title>CryptoCoin Tracker</title>
+	<script src="js/lib/angular.min.js"></script>
 	<script src="js/lib/jquery-1.10.2.min.js"></script>
-	<script src="js/getCoinValues.js"></script>
+	<script src="js/walletViewer.js"></script>
+	<link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-	<table>
+<body ng-controller="WalletCtrl">
+	<p class="note">This tool shows the price at BTC-E. Be aware that you can probably sell for more money other places (like Coinbase)</p>
+	<form>
+		<input type="radio" name="exchange-selection" ng-model="selectedExchange" value="BITSTAMPUSD" id="BITSTAMPUSD"><label for="BITSTAMPUSD">BitStamp USD (${{priceHistory['BITSTAMPUSD'][0][7] | number:2}})</label>
+		<input type="radio" name="exchange-selection" ng-model="selectedExchange" value="BTCEUSD" id="BTCEUSD"><label for="BTCEUSD">BTC-E USD ()</label>
+		<input type="radio" name="exchange-selection" ng-model="selectedExchange" value="CBXUSD" id="CBXUSD"><label for="CBXUSD">CBX USD ()</label>
+		<input type="radio" name="exchange-selection" ng-model="selectedExchange" value="MTGOXUSD" id="MTGOXUSD"><label for="MTGOXUSD">Mt Gox USD ()</label>
+		
+	</form>
+	<table class="coinInfo">
 		<tr>
 			<th>Coin</th>
-			<th>Value BTC</th>
+			<th>Date</th>
 			<th>Coins Owned</th>
-			<th>Coins BTC</th>
-			<th>Value USD</th>
+			<th>Total Spent</th>
+			<th>Market Value per Coin</th>
+			<th>Total Market Value</th>
 		</tr>
 		<tr>
+			<td>BTC on {{selectedExchange}}</td>
 			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>{{totalCoins()}} {{$scope.selectedCoin}}</td>
+			<td>${{totalSpent() | number:2}}</td>
+			<td>${{valuePerCoinInUSD() | number:2}}</td>
+			<td>${{totalMarketValueInUSD() | number:2}}</td>
 		</tr>
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>--</td>
+			<td>--</td>
+			<td>--</td>
+			<td>--</td>
+			<td>--</td>
+			<td>--{{selectedExchange}}</td>
 		</tr>
-		<tr>
+		<tr ng-repeat="day in priceHistory[selectedExchange]">
+			<td></td>
+			<td>{{day[0]}}</td>
 			<td></td>
 			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>${{day[7] | number:2}}</td>
 			<td></td>
 		</tr>
 	</table>
+
 </body>
 </html>

@@ -26,10 +26,10 @@ $(function(){
 				'notes': 'The rest of the big transaction!'
 			}
 		]
-	}
+	};
 	Crypto.init();
 	// Crypto.getExchange('USD','BTC', function(data){
-	// 	console.log(data.exchangeRate);
+	//	console.log(data.exchangeRate);
 	// });
 	Crypto.getCurrValue('BTC','USD');
 });
@@ -49,7 +49,7 @@ var Crypto = {
 		var supportedCoins = ['BTC','LTC'];
 		for (var i = 0; i < supportedCoins.length; i++) {
 			Crypto.coinValue[supportedCoins[i]] = undefined;
-		};
+		}
 		Crypto.coinValue.USD = 1;
 		
 		//load coinbase
