@@ -1,20 +1,58 @@
-.coinInfo {
+.coin-info {
 	background:#EEE;
 	padding:10px 0;
 	margin:20px auto;
 	border:1px solid #AAA;
 }
-.coinInfo th,
-.coinInfo td {
+.coin-info th,
+.coin-info td {
 	padding:0 20px;
 	text-align: center;
 	border-right:1px solid #BBB;
 }
-.coinInfo th:last-child,
-.coinInfo td:last-child {
+.coin-info th:last-child,
+.coin-info td:last-child {
 	border-right:none;
 }
 
 .note {
 	text-align: center;
 }
+
+.exchange-list {
+	display:flex;
+	justify-content:center;
+	margin:0;
+	padding:0;
+	list-style: none;
+	height:20px;
+	background: #FCC;
+}
+.exchange-list-item {
+	float:left;
+	margin-left:10px;
+	padding-left:10px;
+	border-left:1px solid #CCC;
+}
+.exchange-list-item:first-child {
+	margin-left:0;
+	padding-left:0;
+	border-left:none;
+}
+
+/* Radio Button List Styles */
+.radio-button-list input {
+	display:none;
+}
+.radio-button-list label {
+	padding:5px 8px;
+	background:#CCC;
+}
+.radio-button-list input:checked + label {
+	font-weight: bold;
+}
+
+
+
+
+

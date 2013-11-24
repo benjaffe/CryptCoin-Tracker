@@ -9,15 +9,15 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body ng-controller="WalletCtrl">
-	<p class="note">This tool shows the price at BTC-E. Be aware that you can probably sell for more money other places (like Coinbase)</p>
-	<form>
-		<input type="radio" name="exchange-selection" ng-model="selectedExchange" value="BITSTAMPUSD" id="BITSTAMPUSD"><label for="BITSTAMPUSD">BitStamp USD (${{priceHistory['BITSTAMPUSD'][0][7] | number:2}})</label>
-		<input type="radio" name="exchange-selection" ng-model="selectedExchange" value="BTCEUSD" id="BTCEUSD"><label for="BTCEUSD">BTC-E USD ()</label>
-		<input type="radio" name="exchange-selection" ng-model="selectedExchange" value="CBXUSD" id="CBXUSD"><label for="CBXUSD">CBX USD ()</label>
-		<input type="radio" name="exchange-selection" ng-model="selectedExchange" value="MTGOXUSD" id="MTGOXUSD"><label for="MTGOXUSD">Mt Gox USD ()</label>
-		
-	</form>
-	<table class="coinInfo">
+	<p class="note">This tool shows the market value of your bitcoin wallet.</p>
+	<ul class='exchange-list'>
+		<li ng-repeat="exchange in exchangeList" class='exchange-list-item radio-button-list'>
+			<input type="radio" name="exchange-selection" ng-model="$parent.selectedExchange" value="{{exchange}}" id="{{exchange}}">
+			<label for="{{exchange}}">{{exchange}} (${{priceHistory[exchange][0][7] | number:2}})</label>
+		</li>
+	</ul>
+	
+	<table class="coin-info">
 		<tr>
 			<th>Coin</th>
 			<th>Date</th>
@@ -42,7 +42,7 @@
 			<td>--</td>
 			<td>--{{selectedExchange}}</td>
 		</tr>
-		<tr ng-repeat="day in priceHistory[selectedExchange]">
+		<tr ng-repeat="day in priceHistory[selectedExchange].data">
 			<td></td>
 			<td>{{day[0]}}</td>
 			<td></td>

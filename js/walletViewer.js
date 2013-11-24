@@ -51,15 +51,17 @@ var storage = function(key, value) {
 		// console.log('key returning');
 		return storage[key];
 	} else {
-		return false
+		return false;
 	}
 };
 
 
 
 function WalletCtrl($scope) {
+	var apiPollingFrequency = 0.25; //minutes between polls
+
 	$scope.wallet = sampleWallet;
-	$scope.priceHistory = {};
+	$scope.priceHistory = storage('priceHistory') || {};
 	$scope.coinExchangeRates = {
 		'USD':1,
 		'BTC':{},
@@ -69,33 +71,52 @@ function WalletCtrl($scope) {
 	$scope.selectedCoin = storage('selectedCoin') || 'BTC';
 
 	$scope.$watch('selectedExchange', function(newValue, oldValue) {
-		console.log('hi!');
+		console.log('hi')
 		storage('selectedExchange',newValue);
 	});
 
-	var exchangeList = ['BITSTAMPUSD','BTCEUSD','CBXUSD','MTGOXUSD'];
+	$scope.exchangeList = ['BITSTAMPUSD','BTCEUSD','CBXUSD','MTGOXUSD','COINBASEUSD'];
 	// exchangeList = ['MTGOXUSD'];
 
-	for (var i = 0; i < exchangeList.length; i++) {
+	//loop through each exchange and update API data if needed
+	for (var i = 0; i < $scope.exchangeList.length-1; i++) {
 		(function() {
-			var exchange = exchangeList[i];
-			$.getJSON('http://www.quandl.com/api/v1/datasets/BITCOIN/'+exchange+'.json?auth_token=pu9tbsQcPqrtdqtUcfi9')
-				.success(function(json, textStatus) {
+			var exchange = $scope.exchangeList[i]; //name of exchange
+			var url = 'http://www.quandl.com/api/v1/datasets/BITCOIN/'+exchange+'.json?auth_token=pu9tbsQcPqrtdqtUcfi9';
+			
+			//if no price history exists, create one
+			if (!$scope.priceHistory[exchange]) {
+				$scope.priceHistory[exchange] = {
+					lastAccessed: new Date().getTime()
+				};
+			}
+			console.log($scope.priceHistory[exchange].lastAccessed+1000*apiPollingFrequency);
+			console.log(new Date().getTime());
+				
+			//if price history should refresh (based on lastAccessed time)
+			if (($scope.priceHistory[exchange].lastAccessed+1000*apiPollingFrequency < new Date().getTime()) ) {
+				//hit the API
+				$.getJSON(url).success(function(json, textStatus) {
 					$scope.$apply(function(){
-						$scope.priceHistory[json.code] = json.data;
+						//update last accessed time and data
+						$scope.priceHistory[exchange].lastAccessed = new Date().getTime();
+						$scope.priceHistory[exchange].data = json.data;
+						//update the coin exchange rates
 						$scope.coinExchangeRates['mBTC'][exchange] = 1000/json.data[0][7];
 						$scope.coinExchangeRates['BTC'][exchange] = 1/json.data[0][7];
-						// console.log($scope.coinExchangeRates['BTC']);
+					});
 				});
-			});
+			}
+			
 		}());
 	}
+	storage('priceHistory', $scope.priceHistory);
 	
 	var refreshExchangeRates = function() {
 		$.getJSON('https://coinbase.com/api/v1/prices/sell?callback=?', function(json, textStatus) {
 			$scope.$apply(function(){
-				// $scope.coinExchangeRates['mBTC'] = 1000/json.amount;
-				// $scope.coinExchangeRates['BTC'] = 1/json.amount;
+				$scope.coinExchangeRates['mBTC']['COINBASEUSD'] = 1000/json.amount;
+				$scope.coinExchangeRates['BTC']['COINBASEUSD'] = 1/json.amount;
 			});
 		});
 		setTimeout(function(){
